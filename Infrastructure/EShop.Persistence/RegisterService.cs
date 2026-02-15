@@ -1,7 +1,7 @@
-﻿using EShop.Persistence.Datas;
-using Microsoft.EntityFrameworkCore;
-using EShop.Application.Repositories;
+﻿using EShop.Application.Repositories;
+using EShop.Persistence.Datas;
 using EShop.Persistence.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,8 +25,22 @@ public static class RegisterService
 
     private static void AddRepositoriesExtention(IServiceCollection services)
     {
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        //services.AddScoped<IProductRepository, ProductRepository>();
+        //services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+
+        // Read
+        services.AddScoped<IOrderReadRepository, OrderReadRepository>();
+        services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
+        services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
+        services.AddScoped<IProductReadRepository, ProductReadRepository>();
+
+        // Write
+        services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
+        services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
+        services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
+        services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
+
     }
 
     private static void AddServiceExtention(IServiceCollection services)
