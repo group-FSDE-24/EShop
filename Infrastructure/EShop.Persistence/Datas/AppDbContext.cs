@@ -21,6 +21,29 @@ public class AppDbContext : DbContext
         //    .OnDelete(DeleteBehavior.Restrict);
     }
 
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Property("CreatedAt").CurrentValue = DateTime.Now;
+            }
+
+            if (entry.State == EntityState.Modified)
+            {
+                entry.Property("UpdatedAt").CurrentValue = DateTime.Now;
+
+                entry.Property("CreatedAt").IsModified = false;
+            }
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
     // Table
 
     public virtual DbSet<Product> Products { get; set; }
