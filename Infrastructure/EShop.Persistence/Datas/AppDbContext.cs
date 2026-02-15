@@ -14,15 +14,17 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Product>()
-            .HasOne(x => x.Category)
-            .WithMany(x => x.Products)
-            .HasForeignKey(x => x.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+        //modelBuilder.Entity<Product>()
+        //    .HasOne(x => x.Category)
+        //    .WithMany(x => x.Products)
+        //    .HasForeignKey(x => x.CategoryId)
+        //    .OnDelete(DeleteBehavior.Restrict);
     }
 
     // Table
 
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Product> Products { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
+    public virtual DbSet<Order> Orders{ get; set; }
+    public virtual DbSet<Customer> Customers{ get; set; }
 }

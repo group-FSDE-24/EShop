@@ -14,5 +14,5 @@ public  class Product : BaseEntity
     public int CategoryId { get; set; }
 
     // NP
-    public Category Category { get; set; }
+    public virtual Category Category { get; set; }
 }

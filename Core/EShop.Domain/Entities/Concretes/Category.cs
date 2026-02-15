@@ -2,11 +2,11 @@
 
 namespace EShop.Domain.Entities.Concretes;
 
-public  class Category : BaseEntity
+public class Category : BaseEntity
 {
     public string? Name { get; set; }
     public string? Description { get; set; }
 
     // NP
-    public ICollection<Product>Products { get; set; }
+    public virtual ICollection<Product> Products { get; set; }
 }

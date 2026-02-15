@@ -1,3 +1,7 @@
 ﻿namespace EShop.Domain.Entities.Common;
 
-public interface IBaseEntity { }
+// Signature
+public interface IBaseEntity
+{
+    public int Id { get; set; }
+}

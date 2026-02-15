@@ -1,7 +1,7 @@
-﻿using EShop.Application.Repositories;
-using EShop.Persistence.Datas;
-using EShop.Persistence.Repositories;
+﻿using EShop.Persistence.Datas;
 using Microsoft.EntityFrameworkCore;
+using EShop.Application.Repositories;
+using EShop.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,9 +13,12 @@ public static class RegisterService
     {
         services.AddDbContext<AppDbContext>(opt =>
         {
-            opt.UseSqlServer(configuration.GetConnectionString("SqlServer"));
+            opt.UseLazyLoadingProxies()
+               .UseSqlServer(
+                    configuration.GetConnectionString("SqlServer")
+                );
         });
-        
+
         AddRepositoriesExtention(services);
         AddServiceExtention(services);
     }
