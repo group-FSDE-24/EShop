@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using EShop.Application.DTOS.Product;
 using EShop.Application.Services.Abstracts;
-using EShop.Domain.Entities.Concretes;
 
 namespace EShop.WebAPI.Controllers;
 

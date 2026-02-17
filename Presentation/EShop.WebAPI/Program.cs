@@ -1,3 +1,4 @@
+using EShop.Application;
 using EShop.Persistence;
 using System.Text.Json.Serialization;
 
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+builder.Services.AddApplicationRegister();
 builder.Services.AddPersistenceRegister(builder.Configuration);
 
 
