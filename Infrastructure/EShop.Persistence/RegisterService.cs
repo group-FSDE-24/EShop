@@ -1,8 +1,10 @@
-﻿using EShop.Application.Repositories;
-using EShop.Persistence.Datas;
-using EShop.Persistence.Repositories;
+﻿using EShop.Persistence.Datas;
 using Microsoft.EntityFrameworkCore;
+using EShop.Application.Repositories;
+using EShop.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
+using EShop.Persistence.Services.Concretes;
+using EShop.Application.Services.Abstracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EShop.Persistence;
@@ -46,5 +48,7 @@ public static class RegisterService
     private static void AddServiceExtention(IServiceCollection services)
     {
         // 
+
+        services.AddScoped<IProductService, ProductService>();
     }
 }

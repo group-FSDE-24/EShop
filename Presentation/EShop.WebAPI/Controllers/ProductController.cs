@@ -1,8 +1,7 @@
 ﻿using EShop.Application.DTOS;
 using Microsoft.AspNetCore.Mvc;
 using EShop.Application.DTOS.Product;
-using EShop.Application.Repositories;
-using EShop.Domain.Entities.Concretes;
+using EShop.Application.Services.Abstracts;
 
 namespace EShop.WebAPI.Controllers;
 
@@ -10,38 +9,16 @@ namespace EShop.WebAPI.Controllers;
 [ApiController]
 public class ProductController : ControllerBase
 {
-    private readonly IProductReadRepository _productReadRepository;
-    private readonly IProductWriteRepository _productWriteRepository;
-
-    public ProductController(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
+    private readonly IProductService _productService;
+    public ProductController(IProductService productService)
     {
-        _productReadRepository = productReadRepository;
-        _productWriteRepository = productWriteRepository;
+        _productService = productService;
     }
 
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll([FromQuery] PaginationDTO model)
-    {
-        var products = await _productReadRepository.GetAllAsync();
+     => Ok(await _productService.GetAllAsync(model));
 
-        var productWithPagionation = products
-                                     .Skip(model.Page * model.PageSize)
-                                     .Take(model.PageSize)
-                                     .ToList();
-
-        var allProductDto = productWithPagionation
-                            .Select(x => new AllProductDTO()
-                            {
-                                Id = x.Id,
-                                Name = x.Name,
-                                Description = x.Description,
-                                Price = x.Price,
-                                Stock = x.Stock,
-                                CategoryName = x.Category.Name
-                            });
-
-        return Ok(allProductDto);
-    }
 
     [HttpPost("AddProduct")]
     public async Task<IActionResult> AddProduct([FromBody] AddProductDto model)
@@ -49,19 +26,39 @@ public class ProductController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(model);
 
+        var result = await _productService.AddAsync(model);
 
-        var newProduct = new Product()
-        {
-            Name = model.Name,
-            Description = model.Description,
-            Price = model.Price,
-            Stock = model.Stock,
-            CategoryId = model.CategoryId
-        };
+        if (!result)
+            return BadRequest();
 
-        await _productWriteRepository.AddAsync(newProduct);
-        await _productWriteRepository.SaveChangeAsync();
-
-        return Ok(newProduct);
+        return StatusCode(204);
     }
+
+    [HttpDelete("Delete/{id}")]
+    public async Task<IActionResult> DeleteProduct([FromRoute] int id)
+     => await _productService.DeleteAsync(id) ? StatusCode(204) : BadRequest();
+
+
+    [HttpGet("GetById/{id}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        var result = await _productService.GetByIdAsync(id);
+
+        if (result is null)
+            return BadRequest();
+
+        return Ok(result);
+    }
+
+    [HttpPut("Update/{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateProductDTO model)
+    {
+        var result = await _productService.UpdateAsync(id, model);
+
+        if (!result)
+            return BadRequest();
+
+        return StatusCode(204);
+    }
+
 }

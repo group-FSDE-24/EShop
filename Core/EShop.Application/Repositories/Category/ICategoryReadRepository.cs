@@ -7,4 +7,5 @@ public interface ICategoryReadRepository : IReadGenericRepository<Category>
 {
     // Category with Product
 
+
 }
