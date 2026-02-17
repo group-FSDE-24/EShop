@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using EShop.Application.DTOS.Product;
 using EShop.Application.Services.Abstracts;
+using EShop.Domain.Entities.Concretes;
 
 namespace EShop.WebAPI.Controllers;
 
@@ -59,6 +60,17 @@ public class ProductController : ControllerBase
             return BadRequest();
 
         return StatusCode(204);
+    }
+
+    [HttpGet("GetProductsByCategoryId/{categoryId}")]
+    public async Task<IActionResult> GetProductsByCategoryId([FromRoute] int categoryId)
+    {
+        var result = await _productService.GetProductsByCategoryId(categoryId);
+
+        if (result is null)
+            return BadRequest();
+
+        return Ok(result);
     }
 
 }

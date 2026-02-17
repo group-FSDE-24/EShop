@@ -90,6 +90,11 @@ public class ProductService : IProductService
         return mappedData;
     }
 
+    public async Task<List<AllProductDTO>> GetProductsByCategoryId(int categoryId)
+    {
+        return await _productReadRepository.GetProductsByCategoryId(categoryId);
+    }
+
     public async Task<bool> UpdateAsync(int id, UpdateProductDTO model)
     {
         var product = await _productReadRepository.GetByIdAsync(id);
