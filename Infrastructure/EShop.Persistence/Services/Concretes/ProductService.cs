@@ -1,34 +1,34 @@
-﻿using EShop.Application.DTOS;
+﻿using AutoMapper;
+using EShop.Application.DTOS;
 using EShop.Application.DTOS.Product;
 using EShop.Application.Repositories;
 using EShop.Domain.Entities.Concretes;
 using EShop.Application.Services.Abstracts;
+using EShop.Application.Validations.Generic;
 
 namespace EShop.Persistence.Services.Concretes;
 
 public class ProductService : IProductService
 {
+    private readonly IMapper _mapper;
+    private readonly IGenericValidator _genericValidator;
     private readonly IProductReadRepository _productReadRepository;
     private readonly IProductWriteRepository _productWriteRepository;
-
-    public ProductService(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository)
+    public ProductService(IProductReadRepository productReadRepository, IProductWriteRepository productWriteRepository, IGenericValidator genericValidator, IMapper mapper)
     {
         _productReadRepository = productReadRepository;
         _productWriteRepository = productWriteRepository;
+        _genericValidator = genericValidator;
+        _mapper = mapper;
     }
 
     public async Task<bool> AddAsync(AddProductDto model)
     {
-        var newProduct = new Product()
-        {
-            Name = model.Name,
-            Description = model.Description,
-            Price = model.Price,
-            Stock = model.Stock,
-            CategoryId = model.CategoryId
-        };
+        await _genericValidator.ValidateAsync(model);
 
-        await _productWriteRepository.AddAsync(newProduct);
+        var mappedData = _mapper.Map<Product>(model);
+
+        await _productWriteRepository.AddAsync(mappedData);
         await _productWriteRepository.SaveChangeAsync();
 
         return true;
