@@ -3,6 +3,8 @@ using EShop.Application.DTOS.Auth;
 using EShop.Application.Repositories;
 using EShop.Domain.Entities.Concretes;
 using EShop.Application.Services.Abstracts;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EShop.WebAPI.Controllers;
 
@@ -61,5 +63,24 @@ public class AuthController : ControllerBase
 
 
     // Role-u Admin olanlarin goreceyi action yazilacaq
+    [Authorize(Roles = "Admin")]
+    [HttpGet("[action]")]
+    public IActionResult SomeThing()
+    {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+        var claims = identity.Claims;
+
+        var user = new AppUser()
+        {
+            Username = claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value,
+            Email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+            Role = claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
+        };
+
+
+        return Ok(user);
+    }
+
 
 }

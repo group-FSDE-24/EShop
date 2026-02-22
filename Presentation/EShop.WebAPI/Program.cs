@@ -1,6 +1,6 @@
 using EShop.Application;
-using EShop.Infrastructure;
 using EShop.Persistence;
+using EShop.Infrastructure;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddApplicationRegister();
-builder.Services.AddInfrastructureRegister();
+builder.Services.AddInfrastructureRegister(builder.Configuration);
 builder.Services.AddPersistenceRegister(builder.Configuration);
 
 
@@ -34,6 +34,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

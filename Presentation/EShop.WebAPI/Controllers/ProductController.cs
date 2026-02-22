@@ -1,12 +1,14 @@
 ﻿using EShop.Application.DTOS;
 using Microsoft.AspNetCore.Mvc;
 using EShop.Application.DTOS.Product;
+using Microsoft.AspNetCore.Authorization;
 using EShop.Application.Services.Abstracts;
 
 namespace EShop.WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
