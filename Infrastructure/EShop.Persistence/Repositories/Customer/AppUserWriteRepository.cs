@@ -5,9 +5,9 @@ using EShop.Persistence.Repositories.Common;
 
 namespace EShop.Persistence.Repositories;
 
-public class CustomerWriteRepository : WriteGenericRepository<Customer>, ICustomerWriteRepository
+public class AppUserWriteRepository : WriteGenericRepository<AppUser>, IAppUserWriteRepository
 {
-    public CustomerWriteRepository(AppDbContext context) : base(context)
+    public AppUserWriteRepository(AppDbContext context) : base(context)
     {
     }
 }

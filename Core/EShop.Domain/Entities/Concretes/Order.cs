@@ -13,7 +13,7 @@ public class Order : BaseEntity
     // Customer
     public int CustomerId { get; set; }
 
-    public virtual Customer Customer { get; set; }
+    public virtual AppUser Customer { get; set; }
 
 
 }

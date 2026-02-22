@@ -5,9 +5,9 @@ using EShop.Persistence.Repositories.Common;
 
 namespace EShop.Persistence.Repositories;
 
-public class CustomerReadRepository : ReadGenericRepository<Customer>, ICustomerReadRepository
+public class AppUserReadRepository : ReadGenericRepository<AppUser>, IAppUserReadRepository
 {
-    public CustomerReadRepository(AppDbContext dbContext) : base(dbContext)
+    public AppUserReadRepository(AppDbContext dbContext) : base(dbContext)
     {
     }
 }

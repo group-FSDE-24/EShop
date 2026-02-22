@@ -3,6 +3,6 @@ using EShop.Application.Repositories.Common;
 
 namespace EShop.Application.Repositories;
 
-public interface ICustomerReadRepository : IReadGenericRepository<Customer>
+public interface IAppUserWriteRepository : IWriteGenericRepository<AppUser>
 {
 }

@@ -49,5 +49,5 @@ public class AppDbContext : DbContext
     public virtual DbSet<Product> Products { get; set; }
     public virtual DbSet<Category> Categories { get; set; }
     public virtual DbSet<Order> Orders{ get; set; }
-    public virtual DbSet<Customer> Customers{ get; set; }
+    public virtual DbSet<AppUser> AppUsers{ get; set; }
 }

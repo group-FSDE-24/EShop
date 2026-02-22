@@ -34,13 +34,13 @@ public static class RegisterService
         // Read
         services.AddScoped<IOrderReadRepository, OrderReadRepository>();
         services.AddScoped<ICategoryReadRepository, CategoryReadRepository>();
-        services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
+        services.AddScoped<IAppUserReadRepository, AppUserReadRepository>();
         services.AddScoped<IProductReadRepository, ProductReadRepository>();
 
         // Write
         services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
         services.AddScoped<ICategoryWriteRepository, CategoryWriteRepository>();
-        services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
+        services.AddScoped<IAppUserWriteRepository, AppUserWriteRepository>();
         services.AddScoped<IProductWriteRepository, ProductWriteRepository>();
 
     }
