@@ -1,4 +1,5 @@
 using EShop.Application;
+using EShop.Infrastructure;
 using EShop.Persistence;
 using System.Text.Json.Serialization;
 
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddApplicationRegister();
+builder.Services.AddInfrastructureRegister();
 builder.Services.AddPersistenceRegister(builder.Configuration);
 
 

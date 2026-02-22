@@ -21,16 +21,16 @@ public class AppUserReadRepository : ReadGenericRepository<AppUser>, IAppUserRea
 
     public async Task<AppUser> GetUserByEmail(string email)
     {
-        return await _table.FirstOrDefaultAsync(x => x.Email == email);
+        return (await _table.FirstOrDefaultAsync(x => x.Email == email))!;
     }
 
     public async Task<AppUser> GetUserByUsername(string username)
     {
-        return await _table.FirstOrDefaultAsync(x => x.Username == username);
+        return (await _table.FirstOrDefaultAsync(x => x.Username == username))!;
     }
 
     public async Task<AppUser> GetUserByUsernameAndPassword(string username, string password)
     {
-        return await _table.FirstOrDefaultAsync(x => x.Username == username && x.Password == password);
+        return (await _table.FirstOrDefaultAsync(x => x.Username == username && x.Password == password))!;
     }
 }
