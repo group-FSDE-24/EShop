@@ -5,6 +5,8 @@ using EShop.Domain.Entities.Concretes;
 using EShop.Application.Services.Abstracts;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace EShop.WebAPI.Controllers;
 
@@ -26,12 +28,23 @@ public class AuthController : ControllerBase
     [HttpPost("[action]")]
     public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
     {
-        var user = await _appUserReadRepository.GetUserByUsernameAndPassword(loginDTO.Username, loginDTO.Password);
+        var user = await _appUserReadRepository.GetUserByUsername(loginDTO.Username);
 
         if (user is null)
             return BadRequest("Invalid username or password");
 
-        var token = _tokenService.CreateToken(user);
+        using var hmac = new HMACSHA256(user.PasswordSalt);
+        var computedPass = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
+
+        var isCheck = computedPass.SequenceEqual(user.PasswordHash);
+
+        if(!isCheck)
+        {
+            return BadRequest("Invalid Password");
+        }
+        // Yazilacaq
+
+        var token = _tokenService.AccessToken(user);
 
         return Ok(new { token = token });
     }
@@ -44,6 +57,7 @@ public class AuthController : ControllerBase
         if (user is not null)
             return BadRequest("This user already exist");
 
+        using var hmac = new HMACSHA256();
 
         var newUser = new AppUser()
         {
@@ -51,7 +65,8 @@ public class AuthController : ControllerBase
             Surname = userDTO.Surname,
             Email = userDTO.Email,
             Username = userDTO.Username,
-            Password = userDTO.Password,
+            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDTO.Password!)),
+            PasswordSalt = hmac.Key,
             Role = userDTO.Role
         };
 

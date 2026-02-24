@@ -4,5 +4,5 @@ namespace EShop.Application.Services.Abstracts;
 
 public interface ITokenService
 {
-    string CreateToken(AppUser appUser);
+    string AccessToken(AppUser appUser);
 }

@@ -12,12 +12,12 @@ public class AppUserReadRepository : ReadGenericRepository<AppUser>, IAppUserRea
     {
     }
 
-    public async Task<bool> CheckUserByUsernameAndPassword(string username, string password)
-    {
-        var user = await _table.FirstOrDefaultAsync(x=> x.Username == username && x.Password == password);
+    //public async Task<bool> CheckUserByUsernameAndPassword(string username, string password)
+    //{
+    //    var user = await _table.FirstOrDefaultAsync(x=> x.Username == username && x.Password == password);
 
-        return user is not null;
-    }
+    //    return user is not null;
+    //}
 
     public async Task<AppUser> GetUserByEmail(string email)
     {
@@ -29,8 +29,8 @@ public class AppUserReadRepository : ReadGenericRepository<AppUser>, IAppUserRea
         return (await _table.FirstOrDefaultAsync(x => x.Username == username))!;
     }
 
-    public async Task<AppUser> GetUserByUsernameAndPassword(string username, string password)
-    {
-        return (await _table.FirstOrDefaultAsync(x => x.Username == username && x.Password == password))!;
-    }
+    //public async Task<AppUser> GetUserByUsernameAndPassword(string username, string password)
+    //{
+    //    return (await _table.FirstOrDefaultAsync(x => x.Username == username && x.Password == password))!;
+    //}
 }
