@@ -1,5 +1,6 @@
 ﻿using EShop.Application.Repositories;
 using EShop.Domain.Entities.Concretes;
+using EShop.Domain.Helpers;
 using EShop.Persistence.Datas;
 using EShop.Persistence.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,11 @@ public class AppUserReadRepository : ReadGenericRepository<AppUser>, IAppUserRea
     public async Task<AppUser> GetRefreshToken(string refreshToken)
     {
         return (await _table.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken))!;
+    }
+
+    public async Task<AppUser> GetRePasswordToken(string rePasswordToken)
+    {
+        return (await _table.FirstOrDefaultAsync(x => x.RePasswordToken == rePasswordToken))!;
     }
 
     //public async Task<bool> CheckUserByUsernameAndPassword(string username, string password)

@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text;
+using EShop.Domain.Helpers;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using EShop.Application.DTOS.Auth;
+using System.Security.Cryptography;
 using EShop.Application.Repositories;
 using EShop.Domain.Entities.Concretes;
-using EShop.Application.Services.Abstracts;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Cryptography;
-using System.Text;
-using EShop.Domain.Helpers;
-using System.Threading.Tasks;
+using EShop.Application.Services.Abstracts;
 
 namespace EShop.WebAPI.Controllers;
 
@@ -139,6 +138,51 @@ public class AuthController : ControllerBase
         _appUserWriteRepository.Update(user);
         await _appUserWriteRepository.SaveChangeAsync();
 
+    }
+
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> ForgetPassword(ForgetPasswordDTO forgetPassword)
+    {
+        var user = await _appUserReadRepository.GetUserByEmail(forgetPassword.Email);
+
+        if (user is null)
+            return BadRequest("Invalid user");
+
+        var rePassword = _tokenService.RePasswordToken();
+
+        var actionUrl = $"https://localhost:7178/api/Auth/ResetPassword?token={rePassword}";
+
+        user.RePasswordToken = rePassword.Token;
+        user.RePasswordExpireDate = rePassword.ExpireDate;
+        user.RePasswordCreatedDate = rePassword.CreatedDate;
+
+        _appUserWriteRepository.Update(user);
+        await _appUserWriteRepository.SaveChangeAsync();
+
+
+        return Ok(new { actionUrl = actionUrl });
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> ResetPassword([FromQuery] string token, [FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        var user = await _appUserReadRepository.GetRePasswordToken(token);
+
+        if (user is null)
+            return BadRequest("Invalid user");
+
+        if (user.RePasswordExpireDate < DateTime.Now)
+            return BadRequest("Expire date expired");
+        using var hmac = new HMACSHA256();
+
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(resetPasswordDto.NewPassword!));
+        user.PasswordSalt = hmac.Key;
+
+        _appUserWriteRepository.Update(user);
+        await _appUserWriteRepository.SaveChangeAsync();
+
+        return Ok();
     }
 
 }

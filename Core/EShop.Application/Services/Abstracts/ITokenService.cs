@@ -7,4 +7,5 @@ public interface ITokenService
 {
     string AccessToken(AppUser appUser);
     RefreshToken RefreshToken();
+    RePasswordToken RePasswordToken();
 }

@@ -56,6 +56,15 @@ public class TokenService : ITokenService
         return refreshToken;
     }
 
+    public RePasswordToken RePasswordToken()
+    {
+        var rePasswordToken = new RePasswordToken()
+        {
+            ExpireDate = DateTime.Now.AddMinutes(30),
+            CreatedDate = DateTime.Now,
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
+        };
 
-
+        return rePasswordToken;
+    }
 }
