@@ -7,6 +7,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using System.Text;
+using EShop.Domain.Helpers;
+using System.Threading.Tasks;
 
 namespace EShop.WebAPI.Controllers;
 
@@ -38,13 +40,15 @@ public class AuthController : ControllerBase
 
         var isCheck = computedPass.SequenceEqual(user.PasswordHash);
 
-        if(!isCheck)
+        if (!isCheck)
         {
             return BadRequest("Invalid Password");
         }
-        // Yazilacaq
 
         var token = _tokenService.AccessToken(user);
+        var refreshToken = _tokenService.RefreshToken();
+
+        await SetRefreshToken(user, refreshToken);
 
         return Ok(new { token = token });
     }
@@ -97,5 +101,44 @@ public class AuthController : ControllerBase
         return Ok(user);
     }
 
+    [HttpPost("RefreshToken")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        if (string.IsNullOrEmpty(refreshToken))
+            return BadRequest("Invalid Request token");
+
+        var user = await _appUserReadRepository.GetRefreshToken(refreshToken);
+
+        if (user is null)
+            return BadRequest("Invalid user");
+
+        var accessToken = _tokenService.AccessToken(user);
+        var refreshTokenObj = _tokenService.RefreshToken();
+
+        await SetRefreshToken(user, refreshTokenObj);
+
+        return Ok(new { accessToken = accessToken });
+    }
+
+    private async Task SetRefreshToken(AppUser user, RefreshToken refreshToken)
+    {
+        var cookieOptions = new CookieOptions()
+        {
+            HttpOnly = true,
+            Expires = refreshToken.ExpireDate
+        };
+
+        Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+
+        user.RefreshToken = refreshToken.Token;
+        user.RefreshTokenExpireDate = refreshToken.ExpireDate;
+        user.RefreshTokenCreatedDate = refreshToken.CreatedDate;
+
+        _appUserWriteRepository.Update(user);
+        await _appUserWriteRepository.SaveChangeAsync();
+
+    }
 
 }

@@ -7,6 +7,7 @@ public interface IAppUserReadRepository : IReadGenericRepository<AppUser>
 {
     Task<AppUser> GetUserByEmail(string email);
     Task<AppUser> GetUserByUsername(string username);
+    Task<AppUser> GetRefreshToken(string refreshToken);
     // Task<AppUser> GetUserByUsernameAndPassword(string username, string password);
     // Task<bool> CheckUserByUsernameAndPassword(string username, string password);
 }

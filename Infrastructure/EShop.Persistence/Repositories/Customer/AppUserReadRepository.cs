@@ -12,6 +12,11 @@ public class AppUserReadRepository : ReadGenericRepository<AppUser>, IAppUserRea
     {
     }
 
+    public async Task<AppUser> GetRefreshToken(string refreshToken)
+    {
+        return (await _table.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken))!;
+    }
+
     //public async Task<bool> CheckUserByUsernameAndPassword(string username, string password)
     //{
     //    var user = await _table.FirstOrDefaultAsync(x=> x.Username == username && x.Password == password);

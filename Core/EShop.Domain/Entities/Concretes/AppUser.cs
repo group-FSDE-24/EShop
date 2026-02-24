@@ -13,5 +13,16 @@ public class AppUser : BaseEntity
     public string? Username { get; set; }
     public string? Role { get; set; }
 
+    // ---------------------------------------
+
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpireDate { get; set; }
+    public DateTime? RefreshTokenCreatedDate { get; set; }
+
+
+
+    // ---------------------------------------
+
+
     public virtual ICollection<Order> Orders { get; set; }
 }

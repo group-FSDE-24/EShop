@@ -5,6 +5,8 @@ using System.IdentityModel.Tokens.Jwt;
 using EShop.Domain.Entities.Concretes;
 using Microsoft.Extensions.Configuration;
 using EShop.Application.Services.Abstracts;
+using EShop.Domain.Helpers;
+using System.Security.Cryptography;
 
 namespace EShop.Infrastructure.Services.Concretes;
 
@@ -41,4 +43,19 @@ public class TokenService : ITokenService
 
         return tokenHandler.WriteToken(token);
     }
+
+    public RefreshToken RefreshToken()
+    {
+        var refreshToken = new RefreshToken()
+        {
+            ExpireDate = DateTime.Now.AddMinutes(30),
+            CreatedDate = DateTime.Now,
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
+        };
+
+        return refreshToken;
+    }
+
+
+
 }
